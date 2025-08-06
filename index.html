@@ -112,12 +112,13 @@ button:hover {
     </fieldset>
 
     <button type="button" id="calculate">Calculate</button>
-</form>
-
-        <div>
+            <div>
             <h4 id="truckLdm"></h4>
             <h4 id="result"></h4>
         </div>
+</form>
+
+
 </body>
 <script>
     let truckLengthElement = document.getElementById("truck-length");
@@ -142,7 +143,7 @@ button:hover {
         let truckLdm = ldm * truckLength;
         let productSize = productLength * productWidth;
 
-        let productLdm = productSize / truckLDM;
+        let productLdm = productSize / truckLdm;
         
         truckLdmResult.textContent = "Truck LDM = " + truckLdm;
         resultElement.textContent = "Product LDM = " + productLdm;
