@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <label for="">Truck info</label>
+        <label for="">Truck length</label>
+        <input type="number" id="truck-length">
+        <label for="">Truck width</label>
+        <input type="number" id="truck-width">
+        
+        </br>
+    
+        <label for="">Product info</label>
+        <label for="">Product length</label>
+        <input type="number" id="product-length">
+        <label for="">Product width</label>
+        <input type="number" id="product-width">
+
+        <button type="button" id="calculate">Calculate</button>
+
+    </form>
+
+        <div>
+            <h4 id="result"></h4>
+        </div>
+</body>
+<script>
+    let truckLengthElement = document.getElementById("truck-length");
+    let truckWidthElement = document.getElementById("truck-width");
+    let productLengthElement = document.getElementById("product-length");
+    let productWidthElement = document.getElementById("product-width");
+
+    let calculateButton = document.getElementById("calculate");
+    let resultElement = document.getElementById("result");
+
+    calculateButton.addEventListener("click", calculate)
+
+    function calculate(){
+        let truckLength = truckLengthElement.value;
+        let truckWidth = truckWidthElement.value;
+        let productLength = productLengthElement.value;
+        let productWidth = productWidthElement.value;
+
+        let truckLDM = truckLength * truckWidth;
+        let productSize = productLength * productWidth;
+
+        let productLdm = productSize / truckLDM;
+
+        resultElement.textContent = "Product LDM = " + productLdm;
+    }
+</script>
+</html>
