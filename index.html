@@ -121,6 +121,12 @@ button:hover {
     border-collapse: collapse;
 }
 
+#product{
+    width:50%;
+    margin-left:50%;
+    transform: translateX(-50%);
+}
+
 #result{
     white-space: pre-wrap;
 }
@@ -148,8 +154,8 @@ button:hover {
             <div id="result"></div>
         </div>
 
-    <div id="products-list">
-      <span>Products </span>
+    <div id="products-list" hidden>
+      <span><b>Products</b></span>
       <table id="products-table">
             <tr>
                 <th>ID</th>
@@ -164,8 +170,8 @@ button:hover {
 <button id="open-product-page">Add product</button>
 
 <div id="add-product-page" hidden>
-  <fieldset id="product">
-            <button id="close-add-product-modal">X</button>
+  <button id="close-add-product-modal">X</button>
+  <fieldset id="product">            
             <div class="form-group">
                 <label for="product-length">Product Length</label>
                 <input type="number" id="product-length">
@@ -182,66 +188,68 @@ button:hover {
 
 </body>
 <script>
-    let productQuantity = 1;
+    let productQuantity = 1; // used as ID of the products
 
+    // get DOM elements
     let truckLengthElement = document.getElementById("truck-length");
     let truckWidthElement = document.getElementById("truck-width");
     let productLengthElement = document.getElementById("product-length");
     let productWidthElement = document.getElementById("product-width");
     let productsListElement = document.getElementById("products-list")
     let productsTableElement = document.getElementById("products-table");
-
     let calculateButton = document.getElementById("calculate");
     let truckLdmResult = document.getElementById("truckLdm");
     let resultElement = document.getElementById("result");
-
-    let productTemplate = document.getElementById("product");
     let productsOrderedList = document.getElementById("products-ordered-list");
     let addProductButton = document.getElementById("add-product-button");
     let openProductPageButton = document.getElementById("open-product-page");
     let productPageElement = document.getElementById("add-product-page");
     let closeProductPageButton = document.getElementById("close-add-product-modal");
 
-    productNumber = 0;
-    products = {};
+    
+    productNumber = 0; // used as ID of the products
+    products = {}; // store the products as object productId : {length: 1, width: 1}
 
     openProductPageButton.addEventListener("click", productPage);
     closeProductPageButton.addEventListener("click", productPage);
-
     addProductButton.addEventListener("click", addProduct);
-
     calculateButton.addEventListener("click", calculate)
 
     function calculate(){
-        let truckLength = truckLengthElement.value;
-        let truckWidth = truckWidthElement.value;
-        
-        let ldm = 1 * truckWidth;
-        console.log(ldm);
-        let truckLdm = ldm * truckLength;
-        let productSize = productLength * productWidth;
+        // validate input data
+        if (Object.keys(products).length == 0){ 
+            alert("Please enter product");
+        } else if (truckLengthElement.value == "" || truckWidthElement.value == ""){
+            alert("Please enter truck details");
+        } else {
+            let truckLength = truckLengthElement.value;
+            let truckWidth = truckWidthElement.value;
+            
+            let ldm = 1 * truckWidth;
+            let truckLdm = ldm * truckLength;
+            let productSize = productLength * productWidth;
 
-        let productLdm = productSize / ldm;
-
-        productsResult = "";
-        allProductsLdm = 0;
-
-        for (var id of Object.keys(products)){
-            let l = products[id].l;
-            let w = products[id].w;
-            let productSize = l*w;
             let productLdm = productSize / ldm;
-            allProductsLdm += productLdm;
-            productsResult += "Product " + id + " ldm = " + productLdm + " \n";
+
+            productsResult = "";
+            allProductsLdm = 0;
+
+            for (var id of Object.keys(products)){
+                let l = products[id].l;
+                let w = products[id].w;
+                let productSize = l*w;
+                let productLdm = productSize / ldm;
+                allProductsLdm += productLdm;
+                productsResult += "Product " + id + ":  " + productLdm + " ldm \n";
+            }
+
+            ldmLeft = truckLdm - allProductsLdm;
+
+            productsResult += "All products: " + allProductsLdm + " ldm \n";
+            productsResult += "Left in truck: " + ldmLeft + " ldm";
+            truckLdmResult.textContent = "Truck: " + truckLdm + " ldm";
+            resultElement.textContent = productsResult;
         }
-
-        ldmLeft = truckLdm - allProductsLdm;
-
-        productsResult += "All products Ldm = " + allProductsLdm + "\n";
-        productsResult += "Ldm left in truck: " + ldmLeft;
-        truckLdmResult.textContent = "Truck LDM = " + truckLdm;
-        resultElement.textContent = productsResult;
-
     }
 
     function productPage(){
@@ -282,10 +290,10 @@ button:hover {
         tr.appendChild(tdL);
         tr.appendChild(tdW);
         tr.appendChild(tdDelete);
-        //console.log(tr);
 
         productsTableElement.appendChild(tr);
         productPage();
+        showHideProductsTable();
     }
 
     function deleteProductRow(){
@@ -294,8 +302,12 @@ button:hover {
         id = tableRow.childNodes[0].textContent;
         //console.log(id);
         delete products[id];
-        console.log(products);
         tableRow.remove();
+        showHideProductsTable();
+    }
+
+    function showHideProductsTable(){
+        Object.keys(products).length > 0 ? productsListElement.hidden=false : productsListElement.hidden=true;
     }
 </script>
 </html>
