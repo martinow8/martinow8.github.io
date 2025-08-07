@@ -30,6 +30,7 @@ fieldset {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 25px;
+    margin-top:100px;
 }
 
 legend {
@@ -84,6 +85,45 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+#open-product-page{
+    position:absolute;
+    top:20px;
+    right:20px;
+    width:200px;
+}
+
+#add-product-page{
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:2;
+    background-color:grey;
+}
+#close-add-product-modal{
+    position:absolute;
+    right:20px;
+    top:20px;
+    font-size:50px;
+    width:70px;
+    height:70px;    
+    text-align: center;
+    border-radius:10px;
+    box-shadow:15px  grey;
+}
+
+#products-table{
+    width:100%;
+}
+
+#products-table, #products-table tr,  #products-table tr th, #products-table tr td{
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+#result{
+    white-space: pre-wrap;
+}
 </style>
 <body>
 <form action="" class="shipping-form">
@@ -98,55 +138,164 @@ button:hover {
             <input type="number" id="truck-width">
         </div>
     </fieldset>
+    
 
-    <fieldset>
-        <legend>Product Information</legend>
-        <div class="form-group">
-            <label for="product-length">Product Length</label>
-            <input type="number" id="product-length">
-        </div>
-        <div class="form-group">
-            <label for="product-width">Product Width</label>
-            <input type="number" id="product-width">
-        </div>
-    </fieldset>
+
 
     <button type="button" id="calculate">Calculate</button>
             <div>
             <h4 id="truckLdm"></h4>
-            <h4 id="result"></h4>
+            <div id="result"></div>
         </div>
+
+    <div id="products-list">
+      <span>Products </span>
+      <table id="products-table">
+            <tr>
+                <th>ID</th>
+                <th>Length</th>
+                <th>Width</th>
+                <th></th>
+            </tr>
+      </table>
+    </div>
 </form>
 
+<button id="open-product-page">Add product</button>
+
+<div id="add-product-page" hidden>
+  <fieldset id="product">
+            <button id="close-add-product-modal">X</button>
+            <div class="form-group">
+                <label for="product-length">Product Length</label>
+                <input type="number" id="product-length">
+            </div>
+            <div class="form-group">
+                <label for="product-width">Product Width</label>
+                <input type="number" id="product-width">
+            </div>
+            <div class="form-group">
+                <button id="add-product-button">Add product</button>
+            </div>
+        </fieldset>
+</div>
 
 </body>
 <script>
+    let productQuantity = 1;
+
     let truckLengthElement = document.getElementById("truck-length");
     let truckWidthElement = document.getElementById("truck-width");
     let productLengthElement = document.getElementById("product-length");
     let productWidthElement = document.getElementById("product-width");
-    
+    let productsListElement = document.getElementById("products-list")
+    let productsTableElement = document.getElementById("products-table");
 
     let calculateButton = document.getElementById("calculate");
     let truckLdmResult = document.getElementById("truckLdm");
     let resultElement = document.getElementById("result");
+
+    let productTemplate = document.getElementById("product");
+    let productsOrderedList = document.getElementById("products-ordered-list");
+    let addProductButton = document.getElementById("add-product-button");
+    let openProductPageButton = document.getElementById("open-product-page");
+    let productPageElement = document.getElementById("add-product-page");
+    let closeProductPageButton = document.getElementById("close-add-product-modal");
+
+    productNumber = 0;
+    products = {};
+
+    openProductPageButton.addEventListener("click", productPage);
+    closeProductPageButton.addEventListener("click", productPage);
+
+    addProductButton.addEventListener("click", addProduct);
 
     calculateButton.addEventListener("click", calculate)
 
     function calculate(){
         let truckLength = truckLengthElement.value;
         let truckWidth = truckWidthElement.value;
-        let productLength = productLengthElement.value;
-        let productWidth = productWidthElement.value;
         
         let ldm = 1 * truckWidth;
+        console.log(ldm);
         let truckLdm = ldm * truckLength;
         let productSize = productLength * productWidth;
 
         let productLdm = productSize / ldm;
-        
+
+        productsResult = "";
+        allProductsLdm = 0;
+
+        for (var id of Object.keys(products)){
+            let l = products[id].l;
+            let w = products[id].w;
+            let productSize = l*w;
+            let productLdm = productSize / ldm;
+            allProductsLdm += productLdm;
+            productsResult += "Product " + id + " ldm = " + productLdm + " \n";
+        }
+
+        ldmLeft = truckLdm - allProductsLdm;
+
+        productsResult += "All products Ldm = " + allProductsLdm + "\n";
+        productsResult += "Ldm left in truck: " + ldmLeft;
         truckLdmResult.textContent = "Truck LDM = " + truckLdm;
-        resultElement.textContent = "Product LDM = " + productLdm;
+        resultElement.textContent = productsResult;
+
+    }
+
+    function productPage(){
+        if (productPageElement.hidden == true){
+            productPageElement.hidden = false;
+        } else {
+            productPageElement.hidden = true;
+        }
+    }
+    
+    function addProduct(){
+        productWidth = productWidthElement.value;
+        productWidthElement.value = "";
+        productLength = productLengthElement.value;
+        productLengthElement.value = "";
+        productNumber++;
+        products[productNumber] = {w: productWidth, l: productLength};
+        console.log(products);
+        addProductToTheTable(productNumber, productWidth, productLength);
+    }
+
+    function addProductToTheTable(id,w,l){
+        tr = document.createElement("tr");
+        tdId = document.createElement("td");
+        tdL = document.createElement("td");
+        tdW = document.createElement("td");
+        tdDelete = document.createElement("td");
+        tdDeleteButton = document.createElement("button");
+        tdDeleteButton.type = "button";
+        tdDeleteButton.textContent = "Delete";
+        tdDeleteButton.addEventListener("click", deleteProductRow);
+        tdDelete.appendChild(tdDeleteButton);
+
+        tdId.textContent = id;
+        tdL.textContent = l;
+        tdW.textContent = w;
+        tr.appendChild(tdId);
+        tr.appendChild(tdL);
+        tr.appendChild(tdW);
+        tr.appendChild(tdDelete);
+        //console.log(tr);
+
+        productsTableElement.appendChild(tr);
+        productPage();
+    }
+
+    function deleteProductRow(){
+        tableRow = this.parentNode.parentNode;
+        //console.log(tableRow);
+        id = tableRow.childNodes[0].textContent;
+        //console.log(id);
+        delete products[id];
+        console.log(products);
+        tableRow.remove();
     }
 </script>
 </html>
