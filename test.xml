@@ -1,6 +1,28 @@
-<note>
-<to>Tove</to>
-<from>Jani</from>
-<heading>Reminder</heading>
-<body>Don't forget me this weekend!</body>
-</note>
+<nodes name="xml widget sample">
+<node duration="4" category="news" validTo="20180911T1530">
+<widget id="title" type="text">
+<![CDATA[ <span style="left:0px;position:absolute;">cloud</span><span style="left:300px;position:absolute;"><strong>driven</strong></span><span style="left:600px;position:absolute;">Digital</span> <span style="left:900px;position:absolute;"><strong>Signage</strong></span> ]]>
+</widget>
+<widget id="message" type="text">sklera is an easy to use and modern digital signage software solution allowing professional playouts on your displays. With the help of sklera your PC, TV or LFD screen becomes a digital signage device within minutes.</widget>
+<widget id="img1" type="image">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/iconx512.png</widget>
+<widget id="video1" type="video">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/homepageVideo1.mp4</widget>
+</node>
+<node duration="4" category="sport" validFrom="20180911T1530" validTo="20180911T1532">
+<widget id="title" type="text">sklera features</widget>
+<widget id="message" type="text">You will love the way you can manage your content and displays by our cloud driven software solution. From anywhere and any device.</widget>
+<widget id="img1" type="image">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/home_features_mac_phone.jpg</widget>
+<widget id="video1" type="video">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/homepageVideo1.mp4</widget>
+</node>
+<node duration="4" category="sport,football" validFrom="20180911T1630">
+<widget id="title" type="text">Supported hardware</widget>
+<widget id="message" type="text">With sklera your project gets transfered on any screen. Choose between our supported professional signage displays from LG, Samsung or NEC and use sklera using the integrated HTML5 media player. Or you can select a cheap Chrome OS based device like Chromebox or Chromebit to use sklera on your existing displays. Continue to get more information about the available hardware options.</widget>
+<widget id="img1" type="image">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/home_hardware_1.jpg</widget>
+<widget id="video1" type="video">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/homepageVideo1.mp4</widget>
+</node>
+<node duration="4" category="news">
+<widget id="title" type="text">Android App is public</widget>
+<widget id="message" type="text">Our Android™ App is freely available on Google Play™! We now support even a broader range of hardware players including the cheap MK808b or MK809 IV based devices or tablets. Upon request we also offer introduced a broadcast license for players. </widget>
+<widget id="img1" type="image">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/Android_Robot_200.png</widget>
+<widget id="video1" type="video">https://s3-eu-west-1.amazonaws.com/sklera/xmlsample/homepageVideo1.mp4</widget>
+</node>
+</nodes>
